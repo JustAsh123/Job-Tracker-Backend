@@ -1,9 +1,19 @@
 import { pool } from "../db.js";
 
-export const jobsOfUser = async (userId) => {
-  const result = await pool.query("SELECT * FROM jobs WHERE user_id = $1", [
-    userId,
-  ]);
+export const jobsOfUser = async (userId, queries) => {
+  let query = "SELECT * FROM jobs WHERE user_id = $1";
+  let values = [userId];
+  if (queries.status) {
+    query += ` AND status = $${values.length + 1}::status_type`;
+    values.push(queries.status);
+  }
+  if (queries.company) {
+    query += ` AND company = $${values.length + 1}::text`;
+    values.push(queries.company);
+  }
+  console.log(query);
+  const result = await pool.query(query, values);
+
   return {
     success: true,
     result: result.rows,
@@ -80,5 +90,17 @@ export const deleteJob = async (jobId, userId) => {
     success: true,
     result: result.rows[0],
     message: "Job deleted successfully",
+  };
+};
+
+export const getJobStats = async (userId) => {
+  const result = await pool.query(
+    "SELECT status, COUNT(status) as count FROM jobs WHERE user_id = $1 GROUP BY status ORDER BY status",
+    [userId],
+  );
+  return {
+    success: true,
+    result: result.rows,
+    message: "Job stats fetched successfully",
   };
 };

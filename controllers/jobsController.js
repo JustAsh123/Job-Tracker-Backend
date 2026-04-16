@@ -1,7 +1,7 @@
 import * as jobsService from "../services/jobsService.js";
 
 export const getJobsOfUser = async (req, res) => {
-  const result = await jobsService.jobsOfUser(req.user.id);
+  const result = await jobsService.jobsOfUser(req.user.id, req.query);
   if (result.success) {
     return res.status(200).json({
       success: true,
@@ -69,6 +69,20 @@ export const updateJob = async (req, res) => {
 export const deleteJob = async (req, res) => {
   const { jobId } = req.params;
   const result = await jobsService.deleteJob(jobId, req.user.id);
+  if (result.success) {
+    return res.status(200).json({
+      success: true,
+      result: result.result,
+      message: result.message,
+      user: req.user,
+    });
+  } else {
+    return res.status(400).json({ success: false, message: result.message });
+  }
+};
+
+export const getJobStats = async (req, res) => {
+  const result = await jobsService.getJobStats(req.user.id);
   if (result.success) {
     return res.status(200).json({
       success: true,
