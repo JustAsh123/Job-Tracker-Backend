@@ -2,6 +2,8 @@ import axios from "axios";
 
 const BASE_URL = "https://job-tracker-backend-wheat.vercel.app";
 
+const TEST_PUSH = "TEST PUSH";
+
 const api = axios.create({
   baseURL: BASE_URL,
 });
@@ -52,7 +54,9 @@ export const createJob = (data) => api.post("/jobs", data);
 
 export const updateJob = async (jobId, userIdOrData, status, notes) => {
   const payload =
-    userIdOrData && typeof userIdOrData === "object" && !Array.isArray(userIdOrData)
+    userIdOrData &&
+    typeof userIdOrData === "object" &&
+    !Array.isArray(userIdOrData)
       ? userIdOrData
       : { status, notes };
 
