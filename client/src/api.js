@@ -2,6 +2,8 @@ import axios from "axios";
 
 const BASE_URL = "https://job-tracker-backend-wheat.vercel.app";
 
+const TEST_PUSH = "TEST PUSH";
+
 const api = axios.create({
   baseURL: BASE_URL,
 });
